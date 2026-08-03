@@ -30,7 +30,7 @@ GEMINI_API_KEY=your_api_key_here
 
 Optional configuration:
 
-- `AI_COMMIT_MODEL`: Model name (defaults to `gemini-1.5-flash`).
+- `AI_COMMIT_MODEL`: Model name (defaults to `gemini-3.0-flash`).
 - `prompt.md`: If present in the executable directory, its text overrides the default system prompt.
 
 ## Usage
