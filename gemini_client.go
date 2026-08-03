@@ -75,7 +75,7 @@ func GenerateCommitMessage(ctx context.Context, systemPrompt, diff, branch, user
 		return "", fmt.Errorf("GEMINI_API_KEY is not set. Please set it in .env or your environment")
 	}
 	if modelName == "" {
-		modelName = "gemini-1.5-flash"
+		modelName = "gemini-3.0-flash"
 	}
 
 	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", modelName, apiKey)
