@@ -8,7 +8,13 @@
 
 ## Build
 
-Compile the binary:
+Compile the binaries and deploy to `~/dotfiles/bin/`:
+
+```sh
+./build.sh
+```
+
+Or build manually for local testing:
 
 ```sh
 go build -o ai-commit .

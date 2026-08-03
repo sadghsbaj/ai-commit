@@ -2,11 +2,16 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
+
+//go:embed prompt.md
+var embeddedPrompt string
 
 func main() {
 	// Pre-flight checks
@@ -25,13 +30,16 @@ func main() {
 		PrintError("Could not load config", err)
 	}
 
-	systemPrompt := "You are an expert software engineer. Analyze the provided git diff and the current branch name. Write a professional, technically accurate, and concise git commit message in English. Use the Conventional Commits format (e.g., feat:, fix:, chore:). Only return the commit message, no markdown formatting, no explanations."
+	systemPrompt := strings.TrimSpace(embeddedPrompt)
+	if systemPrompt == "" {
+		systemPrompt = "You are an expert software engineer. Analyze the provided git diff and the current branch name. Write a professional, technically accurate, and concise git commit message in English. Use the Conventional Commits format (e.g., feat:, fix:, chore:). Only return the commit message, no markdown formatting, no explanations."
+	}
 
 	exePath, err := os.Executable()
 	if err == nil {
 		exeDir := filepath.Dir(exePath)
 		promptPath := filepath.Join(exeDir, "prompt.md")
-		if systemPromptBytes, err := os.ReadFile(promptPath); err == nil {
+		if systemPromptBytes, err := os.ReadFile(promptPath); err == nil && len(strings.TrimSpace(string(systemPromptBytes))) > 0 {
 			systemPrompt = string(systemPromptBytes)
 		}
 	}
