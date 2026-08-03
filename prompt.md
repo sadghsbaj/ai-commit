@@ -74,6 +74,18 @@ Use the branch name as a secondary signal for scope or intent (e.g.
 what the diff actually shows. If the branch name and the diff conflict, 
 trust the diff.
 
+# RECENT COMMIT HISTORY
+
+You may also be given the subject lines of the last few commits on this 
+branch. Use this only as a style reference — to match the existing type 
+and scope conventions, capitalization, phrasing patterns, and typical 
+length used in this project. 
+
+Do not use it as information about what the current change does or why. 
+The current diff is the only source of truth for content. If recent 
+commits aren't provided, or there aren't enough of them yet, just follow 
+the rules above with no history to match against.
+
 # STRICT RULES
 
 - Base the message only on the diff you were given. Do not guess at intent 
