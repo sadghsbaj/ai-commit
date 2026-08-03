@@ -57,6 +57,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	for _, arg := range os.Args[1:] {
+		if arg == "--test-prompt" || arg == "-t" || arg == "--dry-run" {
+			fmt.Println(BuildPromptText(systemPrompt, diff, branch, ""))
+			return
+		}
+	}
+
 	userComment := ""
 
 	for {
