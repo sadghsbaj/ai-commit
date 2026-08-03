@@ -30,7 +30,7 @@ GEMINI_API_KEY=your_api_key_here
 
 Optional configuration:
 
-- `AI_COMMIT_MODEL`: Model name (defaults to `gemini-3.0-flash`).
+- `AI_COMMIT_MODEL`: Model name (defaults to `gemini-1.5-flash`).
 - `prompt.md`: If present in the executable directory, its text overrides the default system prompt.
 
 ## Usage
@@ -40,6 +40,12 @@ Stage changes in a Git repository and run the executable:
 ```sh
 git add .
 ./ai-commit
+```
+
+To print the generated prompt without calling the API or committing, run with `--test-prompt` (or `-t`, `--dry-run`):
+
+```sh
+./ai-commit --test-prompt
 ```
 
 When a commit message is proposed, select an action:
