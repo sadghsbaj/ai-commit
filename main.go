@@ -53,6 +53,7 @@ func main() {
 	}
 
 	branch, _ := GetCurrentBranch()
+	recentCommits := GetRecentCommitMessages(5)
 	diff, err := GetFilteredStagedDiff()
 	if err != nil && !testPrompt {
 		PrintError("Failed to get staged diff", err)
@@ -63,7 +64,7 @@ func main() {
 		if strings.TrimSpace(diff) == "" {
 			diff = "<no staged changes / example diff>"
 		}
-		fmt.Println(BuildPromptText(systemPrompt, diff, branch, ""))
+		fmt.Println(BuildPromptText(systemPrompt, diff, branch, "", recentCommits))
 		return
 	}
 
@@ -77,7 +78,7 @@ func main() {
 
 	for {
 		spinner := StartSpinner("⏳ Thinking...")
-		suggestion, err := GenerateCommitMessage(context.Background(), systemPrompt, diff, branch, userComment)
+		suggestion, err := GenerateCommitMessage(context.Background(), systemPrompt, diff, branch, userComment, recentCommits)
 		spinner.Stop()
 
 		if err != nil {

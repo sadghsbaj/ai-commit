@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -58,4 +59,19 @@ func GetFilteredStagedDiff() (string, error) {
 		return "", err
 	}
 	return out.String(), nil
+}
+
+// GetRecentCommitMessages returns the last count commit messages formatted as string or empty string if none/error.
+func GetRecentCommitMessages(count int) string {
+	if count <= 0 {
+		return ""
+	}
+	cmd := exec.Command("git", "--no-pager", "log", "-n", strconv.Itoa(count), "--format=%s", "--no-merges")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(out.String())
 }

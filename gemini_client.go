@@ -54,8 +54,12 @@ func LoadConfig() error {
 }
 
 // BuildPromptText constructs the full prompt payload string sent to the LLM.
-func BuildPromptText(systemPrompt, diff, branch, userComment string) string {
-	promptText := systemPrompt + "\n\nBranch: " + branch + "\n\nDiff:\n" + diff
+func BuildPromptText(systemPrompt, diff, branch, userComment, recentCommits string) string {
+	promptText := systemPrompt + "\n\nBranch: " + branch
+	if recentCommits != "" {
+		promptText += "\n\nRecent Commit History:\n" + recentCommits
+	}
+	promptText += "\n\nDiff:\n" + diff
 	if userComment != "" {
 		promptText += "\n\nUser Feedback for refinement: " + userComment
 	}
@@ -63,7 +67,7 @@ func BuildPromptText(systemPrompt, diff, branch, userComment string) string {
 }
 
 // GenerateCommitMessage calls the Gemini API to get a commit message.
-func GenerateCommitMessage(ctx context.Context, systemPrompt, diff, branch string, userComment string) (string, error) {
+func GenerateCommitMessage(ctx context.Context, systemPrompt, diff, branch, userComment, recentCommits string) (string, error) {
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	modelName := os.Getenv("AI_COMMIT_MODEL")
 
@@ -76,7 +80,7 @@ func GenerateCommitMessage(ctx context.Context, systemPrompt, diff, branch strin
 
 	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", modelName, apiKey)
 
-	promptText := BuildPromptText(systemPrompt, diff, branch, userComment)
+	promptText := BuildPromptText(systemPrompt, diff, branch, userComment, recentCommits)
 
 	reqBody := GeminiRequest{
 		Contents: []Content{
