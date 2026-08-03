@@ -20,7 +20,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if !HasStagedChanges() {
+	testPrompt := false
+	for _, arg := range os.Args[1:] {
+		if arg == "--test-prompt" || arg == "-t" || arg == "--dry-run" {
+			testPrompt = true
+			break
+		}
+	}
+
+	if !testPrompt && !HasStagedChanges() {
 		PrintError("No staged changes found. Please run 'git add' to stage your changes first.", nil)
 		os.Exit(1)
 	}
@@ -46,22 +54,23 @@ func main() {
 
 	branch, _ := GetCurrentBranch()
 	diff, err := GetFilteredStagedDiff()
-	if err != nil {
+	if err != nil && !testPrompt {
 		PrintError("Failed to get staged diff", err)
 		os.Exit(1)
+	}
+
+	if testPrompt {
+		if strings.TrimSpace(diff) == "" {
+			diff = "<no staged changes / example diff>"
+		}
+		fmt.Println(BuildPromptText(systemPrompt, diff, branch, ""))
+		return
 	}
 
 	if diff == "" {
 		// Just to be completely sure diff filtering didn't hide everything
 		PrintError("Filtered diff is empty. All staged changes are excluded.", nil)
 		os.Exit(1)
-	}
-
-	for _, arg := range os.Args[1:] {
-		if arg == "--test-prompt" || arg == "-t" || arg == "--dry-run" {
-			fmt.Println(BuildPromptText(systemPrompt, diff, branch, ""))
-			return
-		}
 	}
 
 	userComment := ""
